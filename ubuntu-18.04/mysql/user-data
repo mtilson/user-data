@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+echo "### === log: mysql server setup: START"
+apt-get update
+apt-get upgrade -y
+apt-get install mysql-server -y
+
+sed -i "s/$(grep -m 1 bind-address /etc/mysql/mysql.conf.d/mysqld.cnf)/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysqld.cnf
+
+systemctl enable mysql.service
+systemctl restart mysql.service
+
+echo "### === log: mysql server setup: DONE"
+
+store_dir=/root/mysql
+mkdir -p ${store_dir}
+
+db_file=${store_dir}/db # content: line 1: db-name
+user_file=${store_dir}/user # content: line 1: username; line 2: password
+root_file=${store_dir}/root # content: line 1: username; line 2: password
+
+db_name=ccpd
+user_name=ciscat
+root_name=root
+user_pass=$(openssl rand -hex 16)
+root_pass=$(openssl rand -hex 16)
+
+printf "%s\n%s\n" ${user_name} ${user_pass} > ${user_file}
+printf "%s\n%s\n" ${root_name} ${root_pass} > ${root_file}
+printf "%s\n" ${db_name} > ${db_file}
+
+echo "### === log: mysql: secure server"
+tee ${store_dir}/01_mysql_secure_installation.sql << _EOF | mysql 
+DELETE FROM mysql.user WHERE User='';
+DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+DROP DATABASE IF EXISTS test;
+DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
+FLUSH PRIVILEGES;
+_EOF
+
+echo "### === log: mysql: create DB"
+tee ${store_dir}/02_create_ccpd_db.sql << _EOF | mysql
+CREATE DATABASE ${db_name} CHARACTER SET utf8 COLLATE utf8_general_ci;
+_EOF
+
+echo "### === log: mysql: create user"
+tee ${store_dir}/03_create_ciscat_user.sql << _EOF | mysql
+CREATE USER '${user_name}'@'' IDENTIFIED BY '${user_pass}';
+GRANT ALL PRIVILEGES ON ${db_name}.* TO '${user_name}'@'' WITH GRANT OPTION;
+_EOF
+
+echo "### === log: mysql: change root password"
+tee ${store_dir}/04_change_root_password.sql << _EOF | mysql
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${root_pass}';
+_EOF
+
+#apt-get install mysql-client -y
