@@ -61,7 +61,7 @@ systemctl daemon-reload
 systemctl enable tomcat
 systemctl start tomcat
 
-store_dir=/root/mysql
+store_dir=/root/tomcat
 mkdir -p ${store_dir}
 
 user_file=${store_dir}/user # content: line 1: username; line 2: password
