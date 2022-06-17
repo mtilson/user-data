@@ -1,27 +1,27 @@
-## Collection of `user data` scripts to initialize server OS for various roles
+## Collection of *user data* to initialize server OS for various roles
 
 ### What is it
 
-User data are used to initialize OS during instance creation and can be used both for Clouds and for on-premis deployments
+*User data* are used to initialize OS during instance creation and can be used both for Clouds and for on-premis deployments
 
 ### Directory structure
 
-User data are stored as `user-data` scripts using the `OS/app/component/` directory structure consisted with the following aggregation layers
+*User data* are stored as `user-data` scripts using the `OS/app/component/` directory structure consisted with the following aggregation layers
 
 * `OS` - operation system layer, e.g.: `ubuntu`
 * `app` - application layer, e.g.: `ciscat`
   * for general (*application-agnostic*) components it is possible to use something like `general` as the names for this layer
 * `component` - particular application component, e.g.: `mysql` or `tomcat` or `docker`
 
-### How to test `user data` using AWS EC2 instances
+### How to test *user data* using AWS EC2 instances
 
-There are auxiliary scripts to test provided `user-data` with help of AWS infrastructure. To use then follow these steps
+There are auxiliary scripts to test provided *user-data* with help of AWS infrastructure. To use then follow these steps
 
 * Clone the repo
   * `git clone https://github.com/mtilson/user-data.git`
 * Change to `testing/aws-ec2` directory
   * `cd user-data/testing/aws-ec2`
-* Create `.env-xxx` file defining the following variables (see the example content of `.env` files below)
+* Create `.env-xxx` file defining the following variables (see the section **Example `.env` files** below)
 
 ```
 count:          number of EC2 instances to be created
@@ -48,9 +48,9 @@ user_data_file: path to the tested `user-data` file to be used for instance init
 
 * User-data file
   * `ubuntu/18.04/general/docker/user-data`
-* Example `.env` filename
+* Example `.env` filename to be created
   * `.env.ubuntu-18.04.general.docker`
-* Example command
+* Example command to run
   * `./create.sh .env.ubuntu-18.04.general.docker`
 * References
   * [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
@@ -71,9 +71,9 @@ user_data_file="../../ubuntu/18.04/general/docker/user-data"
 
 * User-data file
   * `ubuntu/18.04/ciscat/mysql/user-data`
-* Example `.env` filename
+* Example `.env` filename to be created
   * `.env.ubuntu-18.04.ciscat.mysql`
-* Example command
+* Example command to run
   * `./create.sh .env.ubuntu-18.04.ciscat.mysql`
 * References
   * [CIS-CAT Pro Dashboard Deployment Guide for Linux](https://cis-cat-pro-dashboard.readthedocs.io/en/stable/source/Dashboard%20Deployment%20Guide%20for%20Linux/)
