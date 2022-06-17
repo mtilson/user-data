@@ -58,7 +58,7 @@ instance_type="t2.micro"
 os_name="ubuntu-18.04"
 key_name="my_key_pair_name"      # replace the value with the name of corresponding key pair
 sg_name="my_security_group_name" # replace the value with the name of corresponding security group
-tag_name_part="docker-general"
+tag_name_part="docker"
 tag_type="mtilson/docker"
 user_data_file="../../ubuntu/18.04/general/docker/user-data"
 ```
@@ -68,12 +68,12 @@ user_data_file="../../ubuntu/18.04/general/docker/user-data"
   * `./create.sh .env.ubuntu-18.04.general.docker`
   * `./list.sh .env.ubuntu-18.04.general.docker`
   * `ssh <user>@<host_ip> -t <path to my_key_pair private key>`
-    * `<user>` and `<host_ip>` are provided as an output of the `./list.sh ...` command 
+    * `<user>` and `<host_ip>` are provided as an output of the `./list.sh ...` command
     * `<path to my_key_pair private key>` corresponding to the EC2 Key Pair
   * `./delete.sh .env.ubuntu-18.04.general.docker`
 
 ---
-##### Mysql server for CIS-CAT Pro Dashboard on Ubuntu 18.04
+##### Mysql 5 server for CIS-CAT Pro Dashboard on Ubuntu 18.04
 
 * Application deployment references
   * [CIS-CAT Pro Dashboard Deployment Guide for Linux](https://cis-cat-pro-dashboard.readthedocs.io/en/stable/source/Dashboard%20Deployment%20Guide%20for%20Linux/)
@@ -85,16 +85,44 @@ instance_type="t2.micro"
 os_name="ubuntu-18.04"
 key_name="my_key_pair_name"      # replace the value with the name of corresponding key pair
 sg_name="my_security_group_name" # replace the value with the name of corresponding security group
-tag_name_part="mysql-ciscat"
+tag_name_part="mysql"
 tag_type="mtilson/ciscat"
 user_data_file="../../ubuntu/18.04/ciscat/mysql/user-data"
 ```
 * *'User-data'* file used
   * `ubuntu/18.04/ciscat/mysql/user-data`
-* Example command to run
+* Example commands to run
   * `./create.sh .env.ubuntu-18.04.ciscat.mysql`
   * `./list.sh .env.ubuntu-18.04.ciscat.mysql`
   * `ssh <user>@<host_ip> -t <path to my_key_pair private key>`
-    * `<user>` and `<host_ip>` are provided as an output of the `./list.sh ...` command 
+    * `<user>` and `<host_ip>` are provided as an output of the `./list.sh ...` command
     * `<path to my_key_pair private key>` corresponding to the EC2 Key Pair
   * `./delete.sh .env.ubuntu-18.04.ciscat.mysql`
+
+---
+##### Tomcat 9 server for CIS-CAT Pro Dashboard on Ubuntu 18.04
+
+* Application deployment references
+  * [CIS-CAT Pro Dashboard Deployment Guide for Linux](https://cis-cat-pro-dashboard.readthedocs.io/en/stable/source/Dashboard%20Deployment%20Guide%20for%20Linux/)
+  * [How To Install Apache Tomcat 9 on Ubuntu 18.04](https://www.digitalocean.com/community/tutorials/install-tomcat-9-ubuntu-1804)
+* Example `.env` filename to be created
+  * `.env.ubuntu-18.04.ciscat.tomcat`
+```
+count=1
+instance_type="t2.micro"
+os_name="ubuntu-18.04"
+key_name="my_key_pair_name"      # replace the value with the name of corresponding key pair
+sg_name="my_security_group_name" # replace the value with the name of corresponding security group
+tag_name_part="tomcat"
+tag_type="mtilson/ciscat"
+user_data_file="../../ubuntu/18.04/ciscat/tomcat/user-data"
+```
+* *'User-data'* file used
+  * `ubuntu/18.04/ciscat/tomcat/user-data`
+* Example commands to run
+  * `./create.sh .env.ubuntu-18.04.ciscat.tomcat`
+  * `./list.sh .env.ubuntu-18.04.ciscat.tomcat`
+  * `ssh <user>@<host_ip> -t <path to my_key_pair private key>`
+    * `<user>` and `<host_ip>` are provided as an output of the `./list.sh ...` command
+    * `<path to my_key_pair private key>` corresponding to the EC2 Key Pair
+  * `./delete.sh .env.ubuntu-18.04.ciscat.tomcat`

@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+echo "### === log: tomcat server setup: START"
+apt-get update
+apt-get upgrade -y
+apt-get install openjdk-11-jre -y
+
+echo "### === log: tomcat server setup: DONE"
+
+groupadd tomcat
+useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
+
+tomcat9_version=9.0.64
+download_url=https://dlcdn.apache.org/tomcat/tomcat-9/v${tomcat9_version}/bin/apache-tomcat-${tomcat9_version}.tar.gz
+download_512=https://downloads.apache.org/tomcat/tomcat-9/v${tomcat9_version}/bin/apache-tomcat-${tomcat9_version}.tar.gz.sha512
+
+cd /tmp
+
+curl -LO ${download_url}
+curl -LO ${download_512}
+
+sha512sum -c ./apache-tomcat-${tomcat9_version}.tar.gz.sha512 || { echo "=== err: have not passed checksum verification" ; exit -1 ; }
+
+mkdir -p /opt/tomcat
+tar xzvf apache-tomcat-${tomcat9_version}.tar.gz -C /opt/tomcat --strip-components=1
+
+cd /opt/tomcat
+
+chgrp -R tomcat /opt/tomcat
+chmod -R g+r conf
+chmod g+x conf
+chown -R tomcat webapps/ work/ temp/ logs/
+
+cat > /etc/systemd/system/tomcat.service << _EOF
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=network.target
+
+[Service]
+Type=forking
+
+Environment=JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
+Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid
+Environment=CATALINA_HOME=/opt/tomcat
+Environment=CATALINA_BASE=/opt/tomcat
+Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC'
+Environment='JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom'
+
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+
+User=tomcat
+Group=tomcat
+UMask=0007
+RestartSec=10
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+_EOF
+
+systemctl daemon-reload
+systemctl enable tomcat
+systemctl start tomcat
+
+store_dir=/root/mysql
+mkdir -p ${store_dir}
+
+user_file=${store_dir}/user # content: line 1: username; line 2: password
+user_name=tomcat-admin
+user_pass=$(openssl rand -hex 16)
+
+printf "%s\n%s\n" ${user_name} ${user_pass} > ${user_file}
+
+cp /opt/tomcat/conf/tomcat-users.xml /opt/tomcat/conf/tomcat-users.xml~
+cat > /opt/tomcat/conf/tomcat-users.xml << _EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<tomcat-users xmlns="http://tomcat.apache.org/xml"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
+              version="1.0">
+  <user username="${user_name}" password="${user_pass}" roles="manager-gui,admin-gui"/>
+</tomcat-users>
+_EOF
+
+systemctl restart tomcat
