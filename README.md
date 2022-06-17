@@ -4,14 +4,13 @@
 
 *'User data'* are used to initialize OS during instance creation and can be used both for Clouds and for on-premis deployments. For GCP VM the term *'startup scripts'* is used.
 
-Get more details on how to use *'user data'* in Clouds with the following documentation 
+Get more details on how to use *'user data'* in Clouds with the following documentation:
 * [AWS EC2 - Run commands on your Linux instance at launch](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html)
 * [Google Compute Engine - Startup scripts overview](https://cloud.google.com/compute/docs/instances/startup-scripts)
 
 ### Directory structure
 
-*'User data'* are stored as `user-data` scripts using the `OS/app/component/` directory structure consisted with the following aggregation layers
-
+*'User data'* are stored as `user-data` scripts using the `OS/app/component/` directory structure consisted with the following aggregation layers:
 * `OS` - operation system layer, e.g.: `ubuntu`
 * `app` - application layer, e.g.: `ciscat`
   * for general (*application-agnostic*) components it is possible to use something like `general` as the names for this layer
@@ -19,8 +18,7 @@ Get more details on how to use *'user data'* in Clouds with the following docume
 
 ### How to test *'user data'* using AWS EC2 instances
 
-There are auxiliary scripts to test provided *user-data* with help of AWS infrastructure. To use then follow these steps
-
+The repo includes auxiliary scripts to test provided *'user-data'* with help of AWS infrastructure. To use them follow these steps:
 * Clone the repo
   * `git clone https://github.com/mtilson/user-data.git`
 * Change to `testing/aws-ec2` directory
