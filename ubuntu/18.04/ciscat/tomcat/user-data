@@ -5,8 +5,6 @@ apt-get update
 apt-get upgrade -y
 apt-get install openjdk-11-jre -y
 
-echo "### === log: tomcat server setup: DONE"
-
 groupadd tomcat
 useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
 
@@ -84,3 +82,5 @@ cat > /opt/tomcat/conf/tomcat-users.xml << _EOF
 _EOF
 
 systemctl restart tomcat
+
+echo "### === log: tomcat server setup: DONE"
