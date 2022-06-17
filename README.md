@@ -48,15 +48,10 @@ user_data_file: path to the tested `user-data` file to be used for instance init
 ---
 ##### Docker on Ubuntu 18.04
 
-* User-data file
-  * `ubuntu/18.04/general/docker/user-data`
+* Application deployment references
+  * [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
 * Example `.env` filename to be created
   * `.env.ubuntu-18.04.general.docker`
-* Example command to run
-  * `./create.sh .env.ubuntu-18.04.general.docker`
-* References
-  * [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
-
 ```
 count=1
 instance_type="t2.micro"
@@ -67,19 +62,21 @@ tag_name_part="docker-general"
 tag_type="mtilson/docker"
 user_data_file="../../ubuntu/18.04/general/docker/user-data"
 ```
+* *'User-data'* file used
+  * `ubuntu/18.04/general/docker/user-data`
+* Example commands to run
+  * `./create.sh .env.ubuntu-18.04.general.docker`
+  * `./list.sh .env.ubuntu-18.04.general.docker`
+  * `ssh <user>@<host_ip> -t <my_key_pair private filepath>`
+  * `./delete.sh .env.ubuntu-18.04.general.docker`
 
 ---
 ##### Mysql server for CIS-CAT Pro Dashboard on Ubuntu 18.04
 
-* User-data file
-  * `ubuntu/18.04/ciscat/mysql/user-data`
+* Application deployment references
+  * [CIS-CAT Pro Dashboard Deployment Guide for Linux](https://cis-cat-pro-dashboard.readthedocs.io/en/stable/source/Dashboard%20Deployment%20Guide%20for%20Linux/)
 * Example `.env` filename to be created
   * `.env.ubuntu-18.04.ciscat.mysql`
-* Example command to run
-  * `./create.sh .env.ubuntu-18.04.ciscat.mysql`
-* References
-  * [CIS-CAT Pro Dashboard Deployment Guide for Linux](https://cis-cat-pro-dashboard.readthedocs.io/en/stable/source/Dashboard%20Deployment%20Guide%20for%20Linux/)
-
 ```
 count=1
 instance_type="t2.micro"
@@ -90,3 +87,10 @@ tag_name_part="mysql-ciscat"
 tag_type="mtilson/ciscat"
 user_data_file="../../ubuntu/18.04/ciscat/mysql/user-data"
 ```
+* *'User-data'* file used
+  * `ubuntu/18.04/ciscat/mysql/user-data`
+* Example command to run
+  * `./create.sh .env.ubuntu-18.04.ciscat.mysql`
+  * `./list.sh .env.ubuntu-18.04.ciscat.mysql`
+  * `ssh <user>@<host_ip> -t <my_key_pair private filepath>`
+  * `./delete.sh .env.ubuntu-18.04.ciscat.mysql`
