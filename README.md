@@ -30,10 +30,11 @@ count:          number of EC2 instances to be created
 instance_type:  type of the EC2 instances
 os_name:        OS name the instance to be based on (it should be one of the `map_os_ssm` array key defined in file `testing/aws-ec2/maps_aws`, e.g: "ubuntu-18.04" or "ubuntu-20.04")
 key_name:       EC2 Key Pair name to be used to access the instances
-sg_name:        Security Group for the instances
+sg_name:        Security Group name for the instances
 tag_name_part:  part of the instances `Name` tag
 tag_type:       value of instances `Type` tag
 user_data_file: path to the tested `user-data` file to be used for instance initialization
+tg_name:        EC2 Target Group name the instance to be added as a target to
 ```
 
 * Run the command to create corresponding EC2 instances
@@ -116,6 +117,7 @@ sg_name="my_security_group_name" # replace the value with the name of correspond
 tag_name_part="tomcat"
 tag_type="mtilson/ciscat"
 user_data_file="../../ubuntu/18.04/ciscat/tomcat/user-data"
+tg_name="ciscat"
 ```
 * *'User-data'* file used
   * `ubuntu/18.04/ciscat/tomcat/user-data`

@@ -29,6 +29,11 @@ ami_id=$(aws ssm get-parameters --names \
   --output text)
 test -n "$ami_id" || { echo "=== err: AMI ID received for AMI alias ${map_os_ssm[$os_name]} is empty" ; exit -11 ; }
 
+test -z "$tg_name" || {
+	tg_arn=$(aws elbv2 describe-target-groups --names $tg_name --query 'TargetGroups[].TargetGroupArn' | jq -c '.[0]' | tr -d '"')
+	test -n "$tg_arn" || { echo "=== err: cannot get ARN for the specified target name: $tg_name"; exit -12 ; }
+}
+
 sg_id=$(aws ec2 describe-security-groups \
   --group-names $sg_name \
   --query 'SecurityGroups[*].GroupId' \
@@ -64,7 +69,7 @@ cat <<-EOF
 	    Tag specifications: $tag_specifications
 	EOF
 
-aws ec2 run-instances \
+instance_ids=$(aws ec2 run-instances \
   --image-id "$ami_id" \
   --count "$count" \
   --instance-type "$instance_type" \
@@ -72,4 +77,15 @@ aws ec2 run-instances \
   --user-data "file://${user_data_file}" \
   --security-group-ids "$sg_id" \
   --subnet-id "$subnet_id" \
-  --tag-specifications "$tag_specifications"
+  --tag-specifications "$tag_specifications" \
+  --query 'Instances[].InstanceId' | jq -c '.[]' | tr -d '"')
+
+test -z "$tg_arn" || {
+	echo "=== Target Group ARN: $tg_arn"
+	for i in $instance_ids ; do
+		echo "    Waiting for running state of Instance with ID: $i"
+		#aws ec2 describe-instances --instance-ids $i
+		aws ec2 wait instance-running --instance-ids $i
+		aws elbv2 register-targets --target-group-arn $tg_arn --targets Id=$i
+	done
+}
