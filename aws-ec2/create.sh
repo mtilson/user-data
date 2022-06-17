@@ -3,7 +3,7 @@
 test -f "$1" || { echo "error: file passed as 1-st arg (\"$1\") doesn't exist"; exit -1 ; }
 source $1
 
-test ${#amiNameAliases[@]} -ne 0 || { echo "nothing to do: array 'amiNameAliases' is empty or undeclared" ; exit -2 ; }
+test ${#map_os_ssm[@]} -ne 0 || { echo "nothing to do: array 'map_os_ssm' is empty or undeclared" ; exit -2 ; }
 test -n "$key_name" || { echo "error: variable 'key_name' is undeclared" ; exit -2 ; }
 test -n "$sg_name" || { echo "error: variable 'sg_name' is undeclared" ; exit -2 ; }
 
@@ -34,20 +34,20 @@ subnet_id=$(aws ec2 describe-subnets \
 test -n "$subnet_id" || { echo "error: ID received for 1-st subnet in default VPC is empty; exiting" ; exit -1 ; }
 
 let i=0
-for os in "${!amiNameAliases[@]}"; do
+for os in "${!map_os_ssm[@]}"; do
   let i++
   tag_specifications="ResourceType=instance,Tags=[{Key=Name,Value=$os-$tag_name_part},{Key=Type,Value=$tag_type}]"
 
   ami_id=$(aws ssm get-parameters --names \
-    ${amiNameAliases[$os]} \
+    ${map_os_ssm[$os]} \
     --query 'Parameters[0].[Value]' \
     --output text)
-  test -n "$ami_id" || { echo "error: AMI ID received for AMI alias ${amiNameAliases[$os]} is empty; continue to next loop iteration" ; continue ; }
+  test -n "$ami_id" || { echo "error: AMI ID received for AMI alias ${map_os_ssm[$os]} is empty; continue to next loop iteration" ; continue ; }
 
   cat <<-EOF
 	== Instance $i ==
 	   OS type: $os
-	   AMI name alias: ${amiNameAliases[$os]}
+	   AMI name alias: ${map_os_ssm[$os]}
 	   AMI ID: $ami_id
 	   Count: $count
 	   Instance type: $instance_type
