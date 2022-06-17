@@ -1,4 +1,0 @@
-declare -A sshUsers=( \
- ["ubuntu"]="ubuntu" \
- ["al2"]="ec2-user" \
-)

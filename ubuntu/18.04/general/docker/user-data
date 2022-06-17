@@ -18,10 +18,3 @@ usermod -aG docker ubuntu
 
 systemctl enable docker.service
 systemctl enable containerd.service
-
-su ubuntu -l -c "git config --global alias.co checkout"
-su ubuntu -l -c "git config --global alias.st status"
-su ubuntu -l -c "git config --global alias.ci commit"
-su ubuntu -l -c "git config --global alias.br branch"
-su ubuntu -l -c "git config --global user.name mtilson"
-su ubuntu -l -c "git config --global user.email m@tilson.biz"

@@ -53,5 +53,3 @@ echo "### === log: mysql: change root password"
 tee ${store_dir}/04_change_root_password.sql << _EOF | mysql
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${root_pass}';
 _EOF
-
-#apt-get install mysql-client -y

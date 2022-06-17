@@ -1,0 +1,16 @@
+declare -A map_os_user=( \
+ ["ubuntu"]="ubuntu" \
+ ["al2"]="ec2-user" \
+)
+
+# for Amazon Linux see:
+#   https://aws.amazon.com/blogs/compute/query-for-the-latest-amazon-linux-ami-ids-using-aws-systems-manager-parameter-store/
+# for Ubuntu see:
+#   https://ubuntu.com/server/docs/cloud-images/amazon-ec2
+declare -A map_os_ssm=( \
+  ["ubuntu-16.04"]="/aws/service/canonical/ubuntu/server/16.04/stable/current/amd64/hvm/ebs-gp2/ami-id" \
+  ["ubuntu-18.04"]="/aws/service/canonical/ubuntu/server/18.04/stable/current/amd64/hvm/ebs-gp2/ami-id" \
+  ["ubuntu-20.04"]="/aws/service/canonical/ubuntu/server/20.04/stable/current/amd64/hvm/ebs-gp2/ami-id" \
+  ["ubuntu-22.04"]="/aws/service/canonical/ubuntu/server/22.04/stable/current/amd64/hvm/ebs-gp2/ami-id" \
+  ["al2-latest"]="/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2" \
+)
