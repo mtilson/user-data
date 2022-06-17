@@ -67,7 +67,9 @@ user_data_file="../../ubuntu/18.04/general/docker/user-data"
 * Example commands to run
   * `./create.sh .env.ubuntu-18.04.general.docker`
   * `./list.sh .env.ubuntu-18.04.general.docker`
-  * `ssh <user>@<host_ip> -t <my_key_pair private filepath>`
+  * `ssh <user>@<host_ip> -t <path to my_key_pair private key>`
+    * `<user>` and `<host_ip>` are provided as an output of the `./list.sh ...` command 
+    * `<path to my_key_pair private key>` corresponding to the EC2 Key Pair
   * `./delete.sh .env.ubuntu-18.04.general.docker`
 
 ---
@@ -92,5 +94,7 @@ user_data_file="../../ubuntu/18.04/ciscat/mysql/user-data"
 * Example command to run
   * `./create.sh .env.ubuntu-18.04.ciscat.mysql`
   * `./list.sh .env.ubuntu-18.04.ciscat.mysql`
-  * `ssh <user>@<host_ip> -t <my_key_pair private filepath>`
+  * `ssh <user>@<host_ip> -t <path to my_key_pair private key>`
+    * `<user>` and `<host_ip>` are provided as an output of the `./list.sh ...` command 
+    * `<path to my_key_pair private key>` corresponding to the EC2 Key Pair
   * `./delete.sh .env.ubuntu-18.04.ciscat.mysql`
