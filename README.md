@@ -1,8 +1,8 @@
-# Collection if `user data` scripts to initialize server OS for various roles
+## Collection of `user data` scripts to initialize server OS for various roles
 
-## How to use
+### How to use
 
-### AWS EC2
+#### AWS EC2
 
 * Clone the repo
   * `git clone https://github.com/mtilson/user-data.git`
@@ -28,10 +28,10 @@ map_os_ssm:     bash 'NAMEs associative arrays' to store a map of 'OS-type' to '
 * Run the following command to delete the created EC2 instances
   * `./delete.sh .env-xxx`
 
-## Examples `.env` files
+### Example `.env` files
 
 ---
-### Docker on Ubuntu 18.04
+#### Docker on Ubuntu 18.04
 
 * User-data file
   * `ubuntu-18.04/docker/user-data`
@@ -57,7 +57,7 @@ declare -A map_os_ssm=( \
 ```
 
 ---
-### Mysql server for CIS-CAT Pro Dashboard on Ubuntu 18.04
+#### Mysql server for CIS-CAT Pro Dashboard on Ubuntu 18.04
 
 * User-data file
   * `ubuntu-18.04/ciscat/mysql/user-data`
