@@ -1,4 +1,4 @@
-# user-data
+# Collection if `user data` scripts to initialize server OS for various roles
 
 ## How to use
 
@@ -61,7 +61,7 @@ declare -A map_os_ssm=( \
 
 * User-data file
   * `ubuntu-18.04/ciscat/mysql/user-data`
-* Example filename
+* Example `.env` filename
   * `.env.ubuntu-18.04.ciscat.mysql`
 * Example command
   * `./create.sh .env.ubuntu-18.04.ciscat.mysql`
