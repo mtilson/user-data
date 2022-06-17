@@ -2,7 +2,11 @@
 
 ### What is it
 
-*'User data'* are used to initialize OS during instance creation and can be used both for Clouds and for on-premis deployments
+*'User data'* are used to initialize OS during instance creation and can be used both for Clouds and for on-premis deployments. For GCP VM the term *'startup scripts'* is used.
+
+Get more details on how to use *'user data'* in Clouds with the following documentation 
+* [AWS EC2 - Run commands on your Linux instance at launch](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html)
+* [Google Compute Engine - Startup scripts overview](https://cloud.google.com/compute/docs/instances/startup-scripts)
 
 ### Directory structure
 
