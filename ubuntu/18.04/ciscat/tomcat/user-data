@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "### === log: tomcat server setup: START"
+echo "### === log: tomcat server: setup START"
 apt-get update
 apt-get upgrade -y
 apt-get install openjdk-11-jre -y
@@ -22,9 +22,98 @@ sha512sum -c ./apache-tomcat-${tomcat9_version}.tar.gz.sha512 || { echo "=== err
 mkdir -p /opt/tomcat
 tar xzvf apache-tomcat-${tomcat9_version}.tar.gz -C /opt/tomcat --strip-components=1
 
+store_dir=/root/tomcat
+mkdir -p ${store_dir}
+
+user_file=${store_dir}/user # content: line 1: username; line 2: password
+user_name=tomcat-admin
+user_pass=$(openssl rand -hex 16)
+
+printf "%s\n%s\n" ${user_name} ${user_pass} > ${user_file}
+
+echo "### === log: tomcat server: config WMI"
+
+cp /opt/tomcat/conf/tomcat-users.xml /opt/tomcat/conf/tomcat-users.xml~
+cat > /opt/tomcat/conf/tomcat-users.xml << _EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<tomcat-users xmlns="http://tomcat.apache.org/xml"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
+              version="1.0">
+  <user username="${user_name}" password="${user_pass}" roles="manager-gui,admin-gui"/>
+</tomcat-users>
+_EOF
+
+echo "### === log: tomcat server: config maxPostSize attribute"
+
+cp /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml~
+cat > /opt/tomcat/conf/server.xml << _EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<Server port="8005" shutdown="SHUTDOWN">
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+  <GlobalNamingResources>
+    <Resource name="UserDatabase" auth="Container"
+              type="org.apache.catalina.UserDatabase"
+              description="User database that can be updated and saved"
+              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+              pathname="conf/tomcat-users.xml" />
+  </GlobalNamingResources>
+
+  <Service name="Catalina">
+    <Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+	       redirectPort="8443"
+	       maxPostSize="35728640" />
+
+    <Engine name="Catalina" defaultHost="localhost">
+      <Realm className="org.apache.catalina.realm.LockOutRealm">
+        <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase"/>
+      </Realm>
+
+      <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true">
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log" suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+      </Host>
+    </Engine>
+  </Service>
+</Server>
+_EOF
+
+echo "### === log: tomcat server: config environment variables"
+
+cp /opt/tomcat/bin/catalina.sh /opt/tomcat/bin/catalina.sh~
+sed \
+    -e '/^#!.*/a export CCPD_CONFIG_FILE="/opt/tomcat/ccpd-config.yml"' \
+    -e '/^#!.*/a export CCPD_LOG_DIR="/opt/tomcat/logs"' \
+    /opt/tomcat/bin/catalina.sh~ > /opt/tomcat/bin/catalina.sh
+
+echo "### === log: tomcat server: config JVM heap settings, UTF-8 character encoding"
+
+cat >> /opt/tomcat/bin/setenv.sh << _EOF
+export CATALINA_OPTS="-Xms1024M -Xmx2048M -Dfile.encoding=UTF-8"
+_EOF
+
+echo "### === log: tomcat server: config remove default applications"
+
+cd /opt/tomcat/webapps
+rm -fR *
+
+echo "### === log: tomcat server: config modify property file"
+
+cp /opt/tomcat/conf/catalina.properties /opt/tomcat/conf/catalina.properties~
+sed \
+    -e '/^tomcat.util.scan.StandardJarScanFilter.jarsToSkip.*/a bcprov*.jar' \
+    /opt/tomcat/conf/catalina.properties~ > /opt/tomcat/conf/catalina.properties
+
 cd /opt/tomcat
 
-chgrp -R tomcat /opt/tomcat
+chgrp -R tomcat ./
 chmod -R g+r conf
 chmod g+x conf
 chown -R tomcat webapps/ work/ temp/ logs/
@@ -61,26 +150,4 @@ systemctl daemon-reload
 systemctl enable tomcat
 systemctl start tomcat
 
-store_dir=/root/tomcat
-mkdir -p ${store_dir}
-
-user_file=${store_dir}/user # content: line 1: username; line 2: password
-user_name=tomcat-admin
-user_pass=$(openssl rand -hex 16)
-
-printf "%s\n%s\n" ${user_name} ${user_pass} > ${user_file}
-
-cp /opt/tomcat/conf/tomcat-users.xml /opt/tomcat/conf/tomcat-users.xml~
-cat > /opt/tomcat/conf/tomcat-users.xml << _EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<tomcat-users xmlns="http://tomcat.apache.org/xml"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
-              version="1.0">
-  <user username="${user_name}" password="${user_pass}" roles="manager-gui,admin-gui"/>
-</tomcat-users>
-_EOF
-
-systemctl restart tomcat
-
-echo "### === log: tomcat server setup: DONE"
+echo "### === log: tomcat server: setup DONE""
