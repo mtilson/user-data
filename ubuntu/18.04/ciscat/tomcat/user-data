@@ -111,6 +111,11 @@ sed \
     -e '/^tomcat.util.scan.StandardJarScanFilter.jarsToSkip.*/a bcprov*.jar,\\' \
     /opt/tomcat/conf/catalina.properties~ > /opt/tomcat/conf/catalina.properties
 
+### uncomment the following to test server setup using sample app (it will be accessible as http(s)://<host>:<port>/sample/)
+#cd /opt/tomcat/webapps
+#curl -LO https://tomcat.apache.org/tomcat-9.0-doc/appdev/sample/sample.war
+#chgrp tomcat sample.war
+
 cd /opt/tomcat
 
 chgrp -R tomcat ./
