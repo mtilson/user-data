@@ -26,15 +26,15 @@ The repo includes auxiliary scripts to test provided *'user-data'* with help of 
 * Create `.env-xxx` file defining the following variables (see the section **Example `.env` files** below)
 
 ```
-count:          number of EC2 instances to be created
-instance_type:  type of the EC2 instances
-os_name:        OS name the instance to be based on (it should be one of the `map_os_ssm` array key defined in file `testing/aws-ec2/maps_aws`, e.g: "ubuntu-18.04" or "ubuntu-20.04")
-key_name:       EC2 Key Pair name to be used to access the instances
-sg_name:        Security Group name for the instances
-tag_name_part:  part of the instances `Name` tag
-tag_type:       value of instances `Type` tag
-user_data_file: path to the tested `user-data` file to be used for instance initialization
-tg_name:        EC2 Target Group name the instance to be added as a target to
+count:          number of EC2 instances to be created; default is '1' if omitted
+instance_type:  type of the EC2 instances; default is 't2.micro' if omitted
+os_name:        OS name the instance to be based on; required - should be one of the `map_os_ssm` array key defined in file `testing/aws-ec2/maps_aws`, e.g: "ubuntu-18.04" or "ubuntu-20.04")
+key_name:       EC2 Key Pair name to be used to access the instances; required
+sg_name:        Security Group name for the instances; required
+tag_name_part:  part of the instances `Name` tag; default is 'general' if omitted
+tag_type:       value of instances `Type` tag; default is 'mtilson/user-data' if omitted
+user_data_file: path to the tested `user-data` file to be used for instance initialization; default is '../../misc/stub' if omitted
+tg_name:        EC2 Target Group name the instance to be added as a target to; if omitted instance is not added to target group 
 ```
 
 * Run the command to create corresponding EC2 instances
