@@ -1,14 +1,12 @@
 ## Collection of *'user data'* to initialize server OS for various roles
 
-### What is it
-
 *'User data'* are used to initialize OS during instance creation and can be used both for Clouds and for on-premise deployments. For GCP VM the term *'startup scripts'* is used.
 
 Get more details on how to use *'user data'* in Clouds with the following documentation:
 * [AWS EC2 - Run commands on your Linux instance at launch](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html)
 * [Google Compute Engine - Startup scripts overview](https://cloud.google.com/compute/docs/instances/startup-scripts)
 
-### Directory structure
+## Directory structure
 
 *'User data'* are stored as `user-data` scripts using the `OS/app/component/` directory structure consisted with the following aggregation layers:
 * `OS` - operation system layer, e.g.: `ubuntu`
@@ -16,7 +14,7 @@ Get more details on how to use *'user data'* in Clouds with the following docume
   * for general (*application-agnostic*) components it is possible to use something like `general` as the names for this layer
 * `component` - particular application component, e.g.: `mysql` or `tomcat` or `docker`
 
-### How to test *'user data'* using AWS EC2 instances
+## How to test *'user data'* using AWS EC2 instances
 
 The repo includes auxiliary scripts to test provided *'user-data'* with help of AWS infrastructure. To use them follow these steps:
 * Clone the repo
@@ -44,10 +42,10 @@ tg_name:        EC2 Target Group name the instance to be added as a target to; i
 * Run the command to delete the created EC2 instances
   * `./delete.sh .env-xxx`
 
-#### Example `.env` files
+### Example `.env` files
 
 ---
-##### Docker on Ubuntu 18.04
+#### Docker on Ubuntu 18.04
 
 * Application deployment references
   * [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
@@ -74,7 +72,7 @@ user_data_file="../../ubuntu/18.04/general/docker/user-data"
   * `./delete.sh .env.ubuntu-18.04.general.docker`
 
 ---
-##### Mysql 5 server for CIS-CAT Pro Dashboard on Ubuntu 18.04
+#### Mysql 5 server for CIS-CAT Pro Dashboard on Ubuntu 18.04
 
 * Application deployment references
   * [CIS-CAT Pro Dashboard Deployment Guide for Linux](https://cis-cat-pro-dashboard.readthedocs.io/en/stable/source/Dashboard%20Deployment%20Guide%20for%20Linux/)
@@ -101,7 +99,7 @@ user_data_file="../../ubuntu/18.04/ciscat/mysql/user-data"
   * `./delete.sh .env.ubuntu-18.04.ciscat.mysql`
 
 ---
-##### Tomcat 9 server for CIS-CAT Pro Dashboard on Ubuntu 18.04
+#### Tomcat 9 server for CIS-CAT Pro Dashboard on Ubuntu 18.04
 
 * Application deployment references
   * [CIS-CAT Pro Dashboard Deployment Guide for Linux](https://cis-cat-pro-dashboard.readthedocs.io/en/stable/source/Dashboard%20Deployment%20Guide%20for%20Linux/)
