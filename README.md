@@ -64,7 +64,7 @@ tag_type="mtilson/docker"
 user_data_file="../../ubuntu/18.04/general/docker/user-data"
 ```
 * *'User-data'* file used
-  * `ubuntu/18.04/general/docker/user-data`
+  * [`ubuntu/18.04/general/docker/user-data`](ubuntu/18.04/general/docker/user-data)
 * Example commands to run
   * `./create.sh .env.ubuntu-18.04.general.docker`
   * `./list.sh .env.ubuntu-18.04.general.docker`
@@ -91,7 +91,7 @@ tag_type="mtilson/ciscat"
 user_data_file="../../ubuntu/18.04/ciscat/mysql/user-data"
 ```
 * *'User-data'* file used
-  * `ubuntu/18.04/ciscat/mysql/user-data`
+  * [`ubuntu/18.04/ciscat/mysql/user-data`](ubuntu/18.04/ciscat/mysql/user-data)
 * Example commands to run
   * `./create.sh .env.ubuntu-18.04.ciscat.mysql`
   * `./list.sh .env.ubuntu-18.04.ciscat.mysql`
@@ -120,7 +120,7 @@ user_data_file="../../ubuntu/18.04/ciscat/tomcat/user-data"
 tg_name="ciscat"
 ```
 * *'User-data'* file used
-  * `ubuntu/18.04/ciscat/tomcat/user-data`
+  * [`ubuntu/18.04/ciscat/tomcat/user-data`](ubuntu/18.04/ciscat/tomcat/user-data)
 * Example commands to run
   * `./create.sh .env.ubuntu-18.04.ciscat.tomcat`
   * `./list.sh .env.ubuntu-18.04.ciscat.tomcat`
