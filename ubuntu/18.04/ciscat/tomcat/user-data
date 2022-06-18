@@ -108,7 +108,7 @@ echo "### === log: tomcat server: config modify property file"
 
 cp /opt/tomcat/conf/catalina.properties /opt/tomcat/conf/catalina.properties~
 sed \
-    -e '/^tomcat.util.scan.StandardJarScanFilter.jarsToSkip.*/a bcprov*.jar' \
+    -e '/^tomcat.util.scan.StandardJarScanFilter.jarsToSkip.*/a bcprov*.jar,\' \
     /opt/tomcat/conf/catalina.properties~ > /opt/tomcat/conf/catalina.properties
 
 cd /opt/tomcat
@@ -150,4 +150,4 @@ systemctl daemon-reload
 systemctl enable tomcat
 systemctl start tomcat
 
-echo "### === log: tomcat server: setup DONE""
+echo "### === log: tomcat server: setup DONE"
