@@ -10,8 +10,6 @@ sed -i "s/$(grep -m 1 bind-address /etc/mysql/mysql.conf.d/mysqld.cnf)/bind-addr
 systemctl enable mysql.service
 systemctl restart mysql.service
 
-echo "### === log: mysql server setup: DONE"
-
 store_dir=/root/mysql
 mkdir -p ${store_dir}
 
@@ -53,3 +51,5 @@ echo "### === log: mysql: change root password"
 tee ${store_dir}/04_change_root_password.sql << _EOF | mysql
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${root_pass}';
 _EOF
+
+echo "### === log: mysql server setup: DONE"

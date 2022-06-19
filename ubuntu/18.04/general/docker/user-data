@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+echo "### === log: docker server: setup START"
 apt-get update
 apt-get upgrade -y
 
@@ -18,3 +19,5 @@ usermod -aG docker ubuntu
 
 systemctl enable docker.service
 systemctl enable containerd.service
+
+echo "### === log: docker server: setup DONE"
