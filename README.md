@@ -16,6 +16,14 @@ Get more details on how to use *'user data'* in Clouds with the following docume
 
 ## How to test *'user data'* using AWS EC2 instances
 
+> **Note**
+>
+> Make sure that your `aws cli` configuration is set up accordingly. You can check configured settings in the following way
+> * Use the following command to show your configured identity which will be used in the further example
+>   * `aws sts get-caller-identity --query "Arn" --output text`
+> * Use the following command to show your configured AWS region which will be used in the further example
+>   * `aws configure get region`
+
 The repo includes auxiliary scripts to test provided *'user-data'* with help of AWS infrastructure. To use them follow these steps:
 * Clone the repo
   * `git clone https://github.com/mtilson/user-data.git`
