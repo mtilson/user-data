@@ -37,6 +37,8 @@ instance_type:  type of the EC2 instances; default is 't2.micro' if omitted
 os_name:        OS name the instance to be based on; required - should be one of the `map_os_ssm` array key defined in file `testing/aws-ec2/maps_aws`, e.g: "ubuntu-18.04" or "ubuntu-20.04")
 key_name:       EC2 Key Pair name to be used to access the instances; required
 sg_name:        Security Group name for the instances; required
+vpc:            VPC ID to place instance to; default is VPC for which value of 'isDefault' attribute is 'true'
+subnet:         Subnet ID to place instance to; default is the first (logical) subnet in the selected VPC
 tag_name_part:  part of the instances `Name` tag; default is 'general' if omitted
 tag_type:       value of instances `Type` tag; default is 'mtilson/user-data' if omitted
 user_data_file: path to the tested `user-data` file to be used for instance initialization; default is '../../misc/stub' if omitted

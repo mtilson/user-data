@@ -34,23 +34,26 @@ test -z "$tg_name" || {
 	test -n "$tg_arn" || { echo "=== err: cannot get ARN for the specified target name: $tg_name"; exit -12 ; }
 }
 
+filters=""
+test -n "$vpc" && { filters="--filters Name=vpc-id,Values=$vpc" ; } || { filters="--filters Name=isDefault,Values=true" ; }
+vpc_id=$(aws ec2 describe-vpcs $filters \
+  --query "Vpcs[*].VpcId" \
+  --output text)
+test -n "$vpc_id" || { echo "=== err: ID received for VPC (${vpc}) is empty" ; exit -22 ; }
+
 sg_id=$(aws ec2 describe-security-groups \
-  --group-names $sg_name \
+  --filters Name=vpc-id,Values=$vpc_id Name=group-name,Values=$sg_name \
   --query 'SecurityGroups[*].GroupId' \
   --output text)
 test -n "$sg_id" || { echo "=== err: ID received for security group $sg_name is empty" ; exit -21 ; }
 
-vpc_id=$(aws ec2 describe-vpcs \
-  --filters Name=isDefault,Values=true \
-  --query "Vpcs[*].VpcId" \
-  --output text)
-test -n "$vpc_id" || { echo "=== err: ID received for default VPC is empty" ; exit -22 ; }
-
-subnet_id=$(aws ec2 describe-subnets \
+filters=""
+test -z "$subnet" || { filters="--filters Name=subnet-id,Values=$subnet" ; }
+subnet_id=$(aws ec2 describe-subnets $filters \
   --filters Name=vpc-id,Values=$vpc_id \
   --query "Subnets[0].SubnetId" \
   --output text)
-test -n "$subnet_id" || { echo "=== err: ID received for 1-st subnet in default VPC is empty" ; exit -23 ; }
+test -n "$subnet_id" || { echo "=== err: ID received subnet (${subnet}) is empty" ; exit -23 ; }
 
 tag_specifications="ResourceType=instance,Tags=[{Key=Name,Value=$os_name-$tag_name_part},{Key=Type,Value=$tag_type}]"
 
