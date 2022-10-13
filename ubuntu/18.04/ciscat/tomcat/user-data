@@ -8,7 +8,7 @@ apt-get install openjdk-11-jre -y
 groupadd tomcat
 useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
 
-tomcat9_version=9.0.64
+tomcat9_version=9.0.68
 download_url=https://dlcdn.apache.org/tomcat/tomcat-9/v${tomcat9_version}/bin/apache-tomcat-${tomcat9_version}.tar.gz
 download_512=https://downloads.apache.org/tomcat/tomcat-9/v${tomcat9_version}/bin/apache-tomcat-${tomcat9_version}.tar.gz.sha512
 
