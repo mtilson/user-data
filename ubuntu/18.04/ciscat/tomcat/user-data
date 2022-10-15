@@ -185,7 +185,7 @@ touch /tmp/CCPD.war
 touch /tmp/ccpd-config.yml
 deploy_flag="false"
 
-test "${deploy_flag}" == "true" || { echo "### === log: there is no way to access private repo with CCDP app; exiting" ; exit 0 ; }
+test "${deploy_flag}" == "true" || { echo "### === wrn: there is no way to access private repo with CCDP app; exiting" ; exit 0 ; }
 
 systemctl stop tomcat
 

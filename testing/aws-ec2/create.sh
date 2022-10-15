@@ -17,7 +17,7 @@ test -n "${map_os_ssm[$os_name]}" || { echo "=== err: variable 'os_name' should 
 
 count=${count:-1}
 instance_type=${instance_type:-t2.micro}
-tag_name_part=${tag_name_part:-general}
+tag_name=${tag_name:-general}
 tag_type=${tag_type:-mtilson/user-data}
 
 user_data_file=${user_data_file:-../../misc/stub}
@@ -55,7 +55,7 @@ subnet_id=$(aws ec2 describe-subnets $filters \
   --output text)
 test -n "$subnet_id" || { echo "=== err: ID received subnet (${subnet}) is empty" ; exit -23 ; }
 
-tag_specifications="ResourceType=instance,Tags=[{Key=Name,Value=$os_name-$tag_name_part},{Key=Type,Value=$tag_type}]"
+tag_specifications="ResourceType=instance,Tags=[{Key=Name,Value=$tag_name},{Key=Type,Value=$tag_type},{Key=OS,Value=$os_name}]"
 
 cat <<-EOF
 	=== Number of instances: $count ===

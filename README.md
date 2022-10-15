@@ -39,7 +39,7 @@ key_name:       EC2 Key Pair name to be used to access the instances; required
 sg_name:        Security Group name for the instances; required
 vpc:            VPC ID to place instance to; default is VPC for which value of 'isDefault' attribute is 'true'
 subnet:         Subnet ID to place instance to; default is the first (logical) subnet in the selected VPC
-tag_name_part:  part of the instances `Name` tag; default is 'general' if omitted
+tag_name:       value of instances `Name` tag; default is 'general' if omitted
 tag_type:       value of instances `Type` tag; default is 'mtilson/user-data' if omitted
 user_data_file: path to the tested `user-data` file to be used for instance initialization; default is '../../misc/stub' if omitted
 tg_name:        EC2 Target Group name the instance to be added as a target to; if omitted instance is not added to target group 
@@ -67,7 +67,7 @@ instance_type="t2.micro"
 os_name="ubuntu-18.04"
 key_name="my_key_pair_name"      # replace the value with the name of corresponding key pair
 sg_name="my_security_group_name" # replace the value with the name of corresponding security group
-tag_name_part="docker"
+tag_name="docker"
 tag_type="mtilson/docker"
 user_data_file="../../ubuntu/18.04/general/docker/user-data"
 ```
@@ -94,7 +94,7 @@ instance_type="t2.micro"
 os_name="ubuntu-18.04"
 key_name="my_key_pair_name"      # replace the value with the name of corresponding key pair
 sg_name="my_security_group_name" # replace the value with the name of corresponding security group
-tag_name_part="mysql"
+tag_name="mysql"
 tag_type="mtilson/ciscat"
 user_data_file="../../ubuntu/18.04/ciscat/mysql/user-data"
 ```
@@ -122,7 +122,7 @@ instance_type="t2.micro"
 os_name="ubuntu-18.04"
 key_name="my_key_pair_name"      # replace the value with the name of corresponding key pair
 sg_name="my_security_group_name" # replace the value with the name of corresponding security group
-tag_name_part="tomcat"
+tag_name="tomcat"
 tag_type="mtilson/ciscat"
 user_data_file="../../ubuntu/18.04/ciscat/tomcat/user-data"
 tg_name="ciscat"
