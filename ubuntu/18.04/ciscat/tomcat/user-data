@@ -2,6 +2,17 @@
 
 echo "### === log: tomcat server: setup START"
 
+sudo -u ubuntu  -i << '_EOF'
+cat > ~/.ssh/rc << '_EOF_INTERNAL'
+#!/bin/bash
+
+# Fix SSH auth socket location so agent forwarding works with tmux
+if test "$SSH_AUTH_SOCK" ; then
+    ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+fi
+_EOF_INTERNAL
+_EOF
+
 hostname="tomcat"
 resp=$(curl -s -o /dev/null -w "%{http_code}" http://169.254.169.254/latest/meta-data/tags/instance/Name)
 test "${resp}" != "200" || hostname=$(curl -s http://169.254.169.254/latest/meta-data/tags/instance/Name)
