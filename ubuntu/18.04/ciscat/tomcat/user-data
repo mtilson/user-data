@@ -194,8 +194,9 @@ chown tomcat:tomcat /opt/tomcat/webapps/CCPD.war
 chmod 750 /opt/tomcat/webapps/CCPD.war
 
 cp /tmp/ccpd-config.yml /opt/tomcat/
-chown tomcat:tomcat ccpd-config.yml
-chmod 600 ccpd-config.yml
+chown tomcat:tomcat /opt/tomcat/ccpd-config.yml
+chmod 600 /opt/tomcat/ccpd-config.yml
 
-systemctl stop tomcat
+systemctl start tomcat
+
 echo "### === log: CCDP: deploy DONE"
