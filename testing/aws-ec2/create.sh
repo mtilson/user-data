@@ -81,6 +81,7 @@ instance_ids=$(aws ec2 run-instances \
   --security-group-ids "$sg_id" \
   --subnet-id "$subnet_id" \
   --tag-specifications "$tag_specifications" \
+  --metadata-options "InstanceMetadataTags=enabled" \
   --query 'Instances[].InstanceId' | jq -c '.[]' | tr -d '"')
 
 test -z "$tg_arn" || {

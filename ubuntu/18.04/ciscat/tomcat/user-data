@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
 echo "### === log: tomcat server: setup START"
+
+hostname="tomcat"
+resp=$(curl -s -o /dev/null -w "%{http_code}" http://169.254.169.254/latest/meta-data/tags/instance/Name)
+test "${resp}" != "200" || hostname=$(curl -s http://169.254.169.254/latest/meta-data/tags/instance/Name)
+
+hostnamectl set-hostname ${hostname}
+
 apt-get update
 apt-get upgrade -y
 apt-get install openjdk-11-jre -y
@@ -101,8 +108,7 @@ _EOF
 
 echo "### === log: tomcat server: config remove default applications"
 
-cd /opt/tomcat/webapps
-rm -fR *
+rm -fR /opt/tomcat/webapps/*
 
 echo "### === log: tomcat server: config modify property file"
 
@@ -116,12 +122,14 @@ sed \
 #curl -LO https://tomcat.apache.org/tomcat-9.0-doc/appdev/sample/sample.war
 #chgrp tomcat sample.war
 
-cd /opt/tomcat
+mkdir /opt/tomcat/legacy/
 
-chgrp -R tomcat ./
-chmod -R g+r conf
-chmod g+x conf
-chown -R tomcat webapps/ work/ temp/ logs/
+chgrp -R tomcat /opt/tomcat/
+
+chmod g+x /opt/tomcat/conf/
+chmod -R g+r /opt/tomcat/conf/
+
+chmod -R g+w /opt/tomcat/logs/ /opt/tomcat/legacy/
 
 cat > /etc/systemd/system/tomcat.service << _EOF
 [Unit]
@@ -156,3 +164,38 @@ systemctl enable tomcat
 systemctl start tomcat
 
 echo "### === log: tomcat server: setup DONE"
+
+echo "### === log: CCDP: deploy START"
+
+deploy_flag="true"
+
+### get CCPD.war
+# Initially try to 'git clone git@github.com:mtilson/storage.git',
+#   if this script is run via SSH session to remote server then
+#   SSH keys can be forwarded to remote SSH agent and can be used
+#   to access the private github repo
+# If the above doesn't work try to get PAT (personal access token)
+#   for 'https://github.com/mtilson/storage.git' and use it to
+#   access the private github repo. The secret (PAT) can be passed
+#   to AWS EC2 instance with help of AWS Secret Manager or using
+#   any other secure ways
+# If no one from the above attempts does work, just stop here
+#   without CCPD deployment (set 'deploy_flag' to 'false')
+touch /tmp/CCPD.war
+touch /tmp/ccpd-config.yml
+deploy_flag="false"
+
+test "${deploy_flag}" == "true" || { echo "### === log: there is no way to access private repo with CCDP app; exiting" ; exit 0 ; }
+
+systemctl stop tomcat
+
+cp /tmp/CCPD.war /opt/tomcat/webapps/
+chown tomcat:tomcat /opt/tomcat/webapps/CCPD.war
+chmod 750 /opt/tomcat/webapps/CCPD.war
+
+cp /tmp/ccpd-config.yml /opt/tomcat/
+chown tomcat:tomcat ccpd-config.yml
+chmod 600 ccpd-config.yml
+
+systemctl stop tomcat
+echo "### === log: CCDP: deploy DONE"
