@@ -129,10 +129,31 @@ sed \
     -e '/^tomcat.util.scan.StandardJarScanFilter.jarsToSkip.*/a bcprov*.jar,\\' \
     /opt/tomcat/conf/catalina.properties~ > /opt/tomcat/conf/catalina.properties
 
+echo "### === log: tomcat server: config cacheMaxSize"
+
+cp /opt/tomcat/conf/context.xml /opt/tomcat/conf/context.xml~
+cat > /opt/tomcat/conf/context.xml << _EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resources cacheMaxSize="51200" />
+
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+    <WatchedResource>WEB-INF/tomcat-web.xml</WatchedResource>
+    <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
+
+    <!-- Uncomment this to disable session persistence across Tomcat restarts -->
+    <!--
+    <Manager pathname="" />
+    -->
+</Context>
+_EOF
+
 ### uncomment the following to test server setup using sample app (it will be accessible as http(s)://<host>:<port>/sample/)
 #cd /opt/tomcat/webapps
 #curl -LO https://tomcat.apache.org/tomcat-9.0-doc/appdev/sample/sample.war
 #chgrp tomcat sample.war
+
+echo "### === log: tomcat server: config permissions"
 
 mkdir /opt/tomcat/legacy/
 
@@ -142,6 +163,8 @@ chmod g+x /opt/tomcat/conf/
 chmod -R g+r /opt/tomcat/conf/
 
 chmod -R g+w /opt/tomcat/logs/ /opt/tomcat/legacy/ /opt/tomcat/temp/ /opt/tomcat/webapps/ /opt/tomcat/work/ /opt/tomcat/conf/
+
+echo "### === log: tomcat server: config systemd unit"
 
 cat > /etc/systemd/system/tomcat.service << _EOF
 [Unit]
