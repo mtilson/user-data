@@ -140,7 +140,7 @@ chgrp -R tomcat /opt/tomcat/
 chmod g+x /opt/tomcat/conf/
 chmod -R g+r /opt/tomcat/conf/
 
-chmod -R g+w /opt/tomcat/logs/ /opt/tomcat/legacy/
+chmod -R g+w /opt/tomcat/logs/ /opt/tomcat/legacy/ /opt/tomcat/temp/ /opt/tomcat/webapps/ /opt/tomcat/work/ /opt/tomcat/conf/
 
 cat > /etc/systemd/system/tomcat.service << _EOF
 [Unit]
@@ -181,20 +181,36 @@ echo "### === log: CCDP: deploy START"
 deploy_flag="true"
 
 ### get CCPD.war
-# Initially try to 'git clone git@github.com:mtilson/storage.git',
-#   if this script is run via SSH session to remote server then
-#   SSH keys can be forwarded to remote SSH agent and can be used
-#   to access the private github repo
-# If the above doesn't work try to get PAT (personal access token)
-#   for 'https://github.com/mtilson/storage.git' and use it to
-#   access the private github repo. The secret (PAT) can be passed
-#   to AWS EC2 instance with help of AWS Secret Manager or using
-#   any other secure ways
+# In case this script is run on remote server connected via SSH.
+#   E.g. this file can be copied to 'ubuntu' user home directory
+#   as '~/user-data.sh'. The script should be run using 'sudo'
+#   with a keys '-H' (to set the HOME environment variable to the
+#   home directory specified by the target user's) and
+#   '--preserve-env=SSH_AUTH_SOCK' (to keep the
+#   'SSH_AUTH_SOCK' environment variable for agent forwarding).
+#   It is possible to use 'git clone git@github.com:mtilson/storage.git'
+#   within the script then and access SSH keys forwarded to remote
+#   SSH agent. The comand can look like:
+#   'ssh -H --preserve-env=SSH_AUTH_SOCK ~/user-data.sh'. Try this
+#   method initially and if it doesn't work proceed with the next one.
+# In case this script is passed to cloud instance as 'useer-data'.
+#   Try to get PAT (personal access token) for 'mtilson'
+#   github.com account and use it to access the private
+#   github repo. E.g. the secret (PAT) can be passed to AWS EC2
+#   instance with help of AWS Secret Manager. Or use any other
+#   secure ways. Try this method as the second attempt.
 # If no one from the above attempts does work, just stop here
 #   without CCPD deployment (set 'deploy_flag' to 'false')
-touch /tmp/CCPD.war
-touch /tmp/ccpd-config.yml
-deploy_flag="false"
+
+ssh-keyscan github.com >> ~/.ssh/known_hosts
+rm -fr /tmp/storage
+git clone git@github.com:mtilson/storage.git /tmp/storage
+
+cp /tmp/storage/ciscat/CCPD.war /tmp
+cp /tmp/storage/ciscat/ccpd-config.yml /tmp
+
+test -f /tmp/CCPD.war || deploy_flag="false"
+test -f /tmp/ccpd-config.yml || deploy_flag="false"
 
 test "${deploy_flag}" == "true" || { echo "### === wrn: there is no way to access private repo with CCDP app; exiting" ; exit 0 ; }
 
