@@ -30,7 +30,8 @@ tomcat9_version=9.0.68
 download_url=https://dlcdn.apache.org/tomcat/tomcat-9/v${tomcat9_version}/bin/apache-tomcat-${tomcat9_version}.tar.gz
 download_512=https://downloads.apache.org/tomcat/tomcat-9/v${tomcat9_version}/bin/apache-tomcat-${tomcat9_version}.tar.gz.sha512
 
-cd /tmp
+rm -fr /tmp/user-data
+cd /tmp/user-data
 
 curl -LO ${download_url}
 curl -LO ${download_512}
@@ -201,6 +202,13 @@ deploy_flag="true"
 #   secure ways. Try this method as the second attempt.
 # If no one from the above attempts does work, just stop here
 #   without CCPD deployment (set 'deploy_flag' to 'false')
+
+
+apt-get install git-lfs -y
+
+git config --global user.email "m@tilson.biz"
+git config --global user.name "mtilson"
+git lfs install
 
 ssh-keyscan github.com >> ~/.ssh/known_hosts
 rm -fr /tmp/storage
