@@ -1,20 +1,24 @@
-## Collection of *'user data'* to initialize server OS for various roles
+## Collection of **'user data'** scripts to initialize server OS for various roles
 
-*'User data'* are used to initialize OS during instance creation and can be used both for Clouds and for on-premise deployments. For GCP VM the term *'startup scripts'* is used.
+**'User data'** are used to initialize OS during instance creation and can be used both for Clouds and for on-premise deployments. For GCP VM the term **'startup scripts'** is used.
 
-Get more details on how to use *'user data'* in Clouds with the following documentation:
+Get more details on how to use **'user data'** in Clouds with the following documentation:
 * [AWS EC2 - Run commands on your Linux instance at launch](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html)
 * [Google Compute Engine - Startup scripts overview](https://cloud.google.com/compute/docs/instances/startup-scripts)
 
 ## Directory structure
 
-*'User data'* are stored as `user-data` scripts using the `OS/app/component/` directory structure consisted with the following aggregation layers:
+**'User data'** are stored as `user-data` scripts using the `OS/app/component/` directory structure consisted with the following aggregation layers:
 * `OS` - operation system layer, e.g.: `ubuntu`
 * `app` - application layer, e.g.: `ciscat`
   * for general (*application-agnostic*) components it is possible to use something like `general` as the names for this layer
 * `component` - particular application component, e.g.: `mysql` or `tomcat` or `docker`
 
-## How to test *'user data'* using AWS EC2 instances
+## Usage
+
+The included `user-data` scripts can be passed to instances being created using [**cloud-init**](https://cloud-init.io), see below the examples for AWS EC2, or can be launched on the running instances using `sudo <path to user-data script>` commands.
+
+## How to test **'user data'** using AWS EC2 instances
 
 > **Note**
 >
@@ -24,7 +28,7 @@ Get more details on how to use *'user data'* in Clouds with the following docume
 > * Use the following command to show your configured AWS region which will be used in the further example
 >   * `aws configure get region`
 
-The repo includes auxiliary scripts to test provided *'user-data'* with help of AWS infrastructure. To use them follow these steps:
+The repo includes auxiliary scripts to test provided **'user data'** with help of AWS infrastructure. To use them follow these steps:
 * Clone the repo
   * `git clone https://github.com/mtilson/user-data.git`
 * Change to `testing/aws-ec2` directory
@@ -71,7 +75,7 @@ tag_name="docker"
 tag_type="mtilson/docker"
 user_data_file="../../ubuntu/18.04/general/docker/user-data"
 ```
-* *'User-data'* file used
+* `user-data` file used
   * [`ubuntu/18.04/general/docker/user-data`](ubuntu/18.04/general/docker/user-data)
 * Example commands to run
   * `./create.sh .env.ubuntu-18.04.general.docker`
@@ -98,7 +102,7 @@ tag_name="mysql"
 tag_type="mtilson/ciscat"
 user_data_file="../../ubuntu/18.04/ciscat/mysql/user-data"
 ```
-* *'User-data'* file used
+* `user-data` file used
   * [`ubuntu/18.04/ciscat/mysql/user-data`](ubuntu/18.04/ciscat/mysql/user-data)
 * Example commands to run
   * `./create.sh .env.ubuntu-18.04.ciscat.mysql`
@@ -127,7 +131,7 @@ tag_type="mtilson/ciscat"
 user_data_file="../../ubuntu/18.04/ciscat/tomcat/user-data"
 tg_name="ciscat"
 ```
-* *'User-data'* file used
+* `user-data` file used
   * [`ubuntu/18.04/ciscat/tomcat/user-data`](ubuntu/18.04/ciscat/tomcat/user-data)
 * Example commands to run
   * `./create.sh .env.ubuntu-18.04.ciscat.tomcat`
