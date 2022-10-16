@@ -192,7 +192,7 @@ deploy_flag="true"
 #   It is possible to use 'git clone git@github.com:mtilson/storage.git'
 #   within the script then and access SSH keys forwarded to remote
 #   SSH agent. The comand can look like:
-#   'ssh -H --preserve-env=SSH_AUTH_SOCK ~/user-data.sh'. Try this
+#   'sudo -H --preserve-env=SSH_AUTH_SOCK ~/user-data.sh'. Try this
 #   method initially and if it doesn't work proceed with the next one.
 # In case this script is passed to cloud instance as 'useer-data'.
 #   Try to get PAT (personal access token) for 'mtilson'
