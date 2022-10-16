@@ -31,6 +31,7 @@ download_url=https://dlcdn.apache.org/tomcat/tomcat-9/v${tomcat9_version}/bin/ap
 download_512=https://downloads.apache.org/tomcat/tomcat-9/v${tomcat9_version}/bin/apache-tomcat-${tomcat9_version}.tar.gz.sha512
 
 rm -fr /tmp/user-data
+mkdir /tmp/user-data
 cd /tmp/user-data
 
 curl -LO ${download_url}
@@ -132,7 +133,7 @@ sed \
 echo "### === log: tomcat server: config cacheMaxSize"
 
 cp /opt/tomcat/conf/context.xml /opt/tomcat/conf/context.xml~
-cat > /opt/tomcat/conf/context.xml << _EOF
+cat > /opt/tomcat/conf/context.xml << '_EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
     <Resources cacheMaxSize="51200" />
@@ -155,7 +156,7 @@ _EOF
 
 echo "### === log: tomcat server: config permissions"
 
-mkdir /opt/tomcat/legacy/
+mkdir /opt/tomcat/legacy/{source,processed,error}
 
 chgrp -R tomcat /opt/tomcat/
 
